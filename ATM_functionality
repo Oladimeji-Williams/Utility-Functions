@@ -12,6 +12,12 @@ def withdrawal_menu():
     print("7 - Other amount")
     print("8 - Return to main menu")
 
+def deposit_menu():
+    print("Press")
+    print("1 - Enter a deposit amount")
+    print("2 - Return to main menu")
+    print("3 - Return card")
+
 def menu():
     print("Welcome to Northern Frock")
     print("1 - Display balance")
@@ -20,10 +26,14 @@ def menu():
     print("9 - Return card")
 
 def menu_option():
-    menu_option = int(input("Enter a number that corresponds to a task: "))
-    return menu_option
+    try:
+        menu_option = int(input("Enter a number that corresponds to a task: "))
+        return menu_option
+    except:
+        print("Input error")
+        menu_option()
 
-def validate_withdrawal(withdrawal_option, current_balance = current_balance):
+def validate_withdrawal(withdrawal_option, current_balance):
     num_dict = {1: 10, 2: 20, 3: 40, 4: 60, 5: 80, 6: 100}
     if withdrawal_option in range(1, 7):
         if current_balance > num_dict[withdrawal_option]:
@@ -35,12 +45,12 @@ def validate_multiple_10(other_amount):
         return True
     else:
         return False
-def validate_other_withdrawal(other_amount, current_balance = current_balance):
+def validate_other_withdrawal(other_amount, current_balance):
     if current_balance > other_amount:
         return True
     else:
         return False
-def calculate_balance(validate_withdrawal, withdrawal_option, current_balance = current_balance):
+def calculate_balance(validate_withdrawal, withdrawal_option, current_balance):
     num_dict = {1: 10, 2: 20, 3: 40, 4: 60, 5: 80, 6: 100}
     if validate_withdrawal:
         current_balance = current_balance - num_dict[withdrawal_option]
@@ -48,7 +58,7 @@ def calculate_balance(validate_withdrawal, withdrawal_option, current_balance = 
     else:
         print("Insufficient balance")
     return current_balance
-def calculate_other_balance(validate_other_withdrawal, withdrawal_option, current_balance = current_balance):
+def calculate_other_balance(validate_other_withdrawal, withdrawal_option, current_balance):
     if validate_other_withdrawal:
         current_balance = current_balance - num_dict[withdrawal_option]
         print(f"{num_dict[withdrawal_option]} just left your account")
@@ -56,28 +66,55 @@ def calculate_other_balance(validate_other_withdrawal, withdrawal_option, curren
         print("Insufficient balance")
     return current_balance
 
-def select(withdrawal_option):
+def select(withdrawal_option, current_balance):
     if withdrawal_option in range(1, 7):
-        current_balance = calculate_balance(validate_withdrawal(withdrawal_option), withdrawal_option)
+        current_balance = calculate_balance(validate_withdrawal(withdrawal_option, current_balance), withdrawal_option, current_balance)
     elif withdrawal_option == 7:
         other_amount = int(input("Enter a multiple amount of 10: "))
         if validate_multiple_10(other_amount):
-            current_balance = calculate_other_balance(validate_other_withdrawal(other_amount), withdrawal_option)
+            current_balance = calculate_other_balance(validate_other_withdrawal(other_amount), withdrawal_option, current_balance)
         else:
             print("Please input a multiple amount of 10")
             current_balance = select(withdrawal_option)
     return current_balance
+def deposit_balance(current_balance):
+    deposit_amount = int(input("Enter an amount: "))
+    current_balance = current_balance + deposit_amount
+    print(f"{deposit_amount} has landed into your account")
+    return current_balance
+def deposit_option(current_balance):
+    deposit_option = int(input("Enter an option: "))
+    if deposit_option == 1:
+        current_balance = deposit_balance(current_balance)
+    elif deposit_option == 2:
+        main()
+    elif deposit_option == 3:
+        print("Thank you for banking with us")
+    return current_balance
 def menu_process(menu_option, current_balance = current_balance):
     if menu_option == 1:
-        print(current_balance)
+        print(f"Your current balance is {current_balance}")
+        print("\n\n")
+        print("___New Transaction___")
+        main()
     elif menu_option == 2:
         withdrawal_menu()
         withdrawal_option = int(input("Enter an option: "))
-        current_balance = select(withdrawal_option)
+        current_balance = select(withdrawal_option, current_balance)
         print(f"Your current balance is {current_balance}")
-    print("\n\n")
-    print("___New Transaction___")
-    return main()
+        print("\n\n")
+        print("___New Transaction___")
+        main()        
+    elif menu_option == 3:
+        deposit_menu()
+        current_balance = deposit_option(current_balance)
+        print(f"Your current balance is {current_balance}")
+        print("\n\n")
+        print("___New Transaction___")
+        main()        
+    elif menu_option == 9:
+        print("Thank you for trying our system. Bye!")
+    
             
             
 def main():
